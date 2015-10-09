@@ -31,6 +31,14 @@ class RegistrationFormValidation
             $this->validationErrors[] = 'Password cannot be empty';
         }
 
+        if((strlen($password))>32){
+            $this->validationErrors[] = 'Password length can not exceed 32 characters';
+        }
+
+        if((strlen($username))>16){
+            $this->validationErrors[] = 'Username length can not exceed 16 characters';
+        }
+
         if(empty($fullname)) {
             $this->validationErrors[] = "Please write in your full name";
         }
