@@ -2,6 +2,12 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 'on');
 
+if(!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == ""){
+    $redirect = "https://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+    header("HTTP/1.1 301 Moved Permanently");
+    header("Location: $redirect");
+}
+
 if (! extension_loaded('openssl')) {
     die('You must enable the openssl extension.');
 }
@@ -15,3 +21,5 @@ else {
     $app = require __DIR__ . '/../src/app.php';
     $app->run();
 }
+
+		
