@@ -31,6 +31,10 @@ class RegistrationFormValidation
             $this->validationErrors[] = 'Password cannot be empty';
         }
 
+        if((strlen($password))<8){
+            $this->validationErrors[] = 'Password does not meet the minimum length (8 characters)';
+        }
+
         if((strlen($password))>32){
             $this->validationErrors[] = 'Password length can not exceed 32 characters';
         }
