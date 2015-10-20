@@ -34,7 +34,7 @@ class PostController extends Controller
         $post = $this->postRepository->find($postId);
         $comments = $this->commentRepository->findByPostId($postId);
         $request = $this->app->request;
-        $message = $request->get('msg');
+        $message = htmlentities($request->get('msg'));
         $variables = [];
 
 
