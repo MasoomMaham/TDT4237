@@ -27,7 +27,7 @@ class LoginController extends Controller
     public function login()
     {
         $request = $this->app->request;
-        $user    = $request->post('user');
+        $user    = strtolower($request->post('user'));
         $pass    = $request->post('pass');
 
         if ($this->auth->checkCredentials($user, $pass)) {
