@@ -26,6 +26,11 @@ class PostController extends Controller
 
     public function show($postId)
     {
+        if ($this->auth->guest()) {
+            $this->app->flash('info', "You must be logged in to view this post.");
+            $this->app->redirect('/');
+        }
+
         $post = $this->postRepository->find($postId);
         $comments = $this->commentRepository->findByPostId($postId);
         $request = $this->app->request;
@@ -97,6 +102,9 @@ class PostController extends Controller
 
             $validation = new PostValidation($title, $author, $content);
             if ($validation->isGoodToGo()) {
+                echo '<script type="text/javascript">', 
+                'document.getElementById("author").readOnly = true;',
+                '</script>';
                 $post = new Post();
                 $post->setAuthor($author);
                 $post->setTitle($title);
