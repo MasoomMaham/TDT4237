@@ -36,6 +36,13 @@ class UserController extends Controller
         $address = $request->post('address');
         $postcode = $request->post('postcode');
 
+        $d_user = $this->userRepository->getNameByUsername($username);
+
+        if(isset($d_user)){
+            $this->app->flash('info', 'Username has already been taken');
+            $this->app->redirect('/user/new');
+        }
+
 
         $validation = new RegistrationFormValidation($username, $password, $fullname, $address, $postcode);
 
