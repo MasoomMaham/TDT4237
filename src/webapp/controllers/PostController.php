@@ -61,7 +61,7 @@ class PostController extends Controller
 
             $comment = new Comment();
             $comment->setAuthor($_SESSION['user']);
-            $comment->setText($this->app->request->post("text"));
+            $comment->setText(htmlentities($this->app->request->post("text")));
             $comment->setDate(date("dmY"));
             $comment->setPost($postId);
             $this->commentRepository->save($comment);
