@@ -30,7 +30,7 @@ class UserController extends Controller
     public function create()
     {
         $request  = $this->app->request;
-        $username = $request->post('user');
+        $username = strtolower($request->post('user'));
         $password = $request->post('pass');
         $fullname = $request->post('fullname');
         $address = $request->post('address');
