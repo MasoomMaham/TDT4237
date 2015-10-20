@@ -92,8 +92,8 @@ class UserController extends Controller
             } else if ($this->auth->check()) {
 
                 $this->render('showuserlite.twig', [
-                    'user' => $user,
-                    'username' => $username
+                    'user' => htmlentities($user),
+                    'username' => htmlentities($username)
                 ]);
             }
         }
