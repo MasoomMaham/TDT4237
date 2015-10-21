@@ -24,7 +24,7 @@ class Hash
         $hashsalt = crypt($plaintext, '$6$' . $salt) . $salt;
         return $hashsalt;
     }
-    
+
     function hash_equals($str1, $str2) {
         if(strlen($str1) != strlen($str2)) {
             return false;
