@@ -16,6 +16,13 @@ class UserRepository
     const DELETE_BY_NAME = "DELETE FROM users WHERE user='%s'";
     const SELECT_ALL     = "SELECT * FROM users";
     const FIND_FULL_NAME   = "SELECT * FROM users WHERE user='%s'";
+    const UPDATE_TIME  = "UPDATE users SET UNIX_TIMESTAMP='%d'WHERE user='%s'";
+    const COMPARE_TIME   = "SELECT * FROM users WHERE user='%s' and UNIX_TIMESTAMP<'%d'";
+    const FAILED_ATTEMPTS  = "select * from users where user='%s'";// and FAILED_ATTEMPTS>3";
+    const UPDATE_ATTEMPTS  = "UPDATE users SET FAILED_ATTEMPTS= FAILED_ATTEMPTS + 1 WHERE user='%s'";
+    const RESET_ATTEMPTS  = "UPDATE users SET FAILED_ATTEMPTS=0 WHERE user='%s'";
+
+
 
     /**
      * @var PDO
@@ -55,7 +62,6 @@ class UserRepository
         $result = $this->pdo->query($query, PDO::FETCH_ASSOC);
         $row = $result->fetch();
         return $row['fullname'];
-
     }
 
     public function findByUser($username)
@@ -68,8 +74,55 @@ class UserRepository
             return false;
         }
 
-
         return $this->makeUserFromRow($row);
+    }
+
+    public function getTimebyUsername($username, $time)
+    {
+        $query = sprintf(self::COMPARE_TIME, $username, $time);
+
+        $result = $this->pdo->query($query, PDO::FETCH_ASSOC);
+        $row = $result->fetch();
+
+        if($row === false){
+            return false;
+        }
+        return true;
+    }
+
+    public function getfailed_attempts($username)
+    {
+        $query = sprintf(self::FIND_FULL_NAME, $username);
+
+        $result = $this->pdo->query($query, PDO::FETCH_ASSOC);
+        $row = $result->fetch();
+        return $row['failed_attempts'];
+
+    }
+
+    public function setfailed_attempts($username)
+    {
+        $query = sprintf(
+            self::UPDATE_ATTEMPTS, $username
+        );
+        $this->pdo->exec($query);
+    }
+
+    public function reset_failed_attempts($username)
+    {
+        $query = sprintf(
+            self::RESET_ATTEMPTS, $username
+        );
+        $this->pdo->exec($query);
+    }
+
+    public function updateDbTime($username)
+    {
+        $time = time()+30;
+        $query = sprintf(
+            self::UPDATE_TIME, $time, $username
+        );
+        $this->pdo->exec($query);
     }
 
     public function deleteByUsername($username)
@@ -78,8 +131,6 @@ class UserRepository
             sprintf(self::DELETE_BY_NAME, $username)
         );
     }
-
-
 
     public function all()
     {

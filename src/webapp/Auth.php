@@ -36,6 +36,25 @@ class Auth
         return $this->hash->check($password, $user->getHash());
     }
 
+    public function checkLastTimeFailed($username)
+    {
+        $time = $this->userRepository->getTimebyUsername($username, time());
+
+        if ($time === false) {
+            return false;
+        }
+        $attempts = $this->userRepository->getfailed_attempts($username);
+        if($attempts>3){
+            $this->userRepository->reset_failed_attempts($username);
+            $this->userRepository->updateDbTime($username);
+            return false;
+        }
+        $this->userRepository->setfailed_attempts($username);
+
+        return true;
+    }
+
+
     /**
      * Check if is logged in.
      */

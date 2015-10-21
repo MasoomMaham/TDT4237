@@ -27,25 +27,31 @@ class LoginController extends Controller
     public function login()
     {
         $request = $this->app->request;
-        $user    = strtolower($request->post('user'));
-        $pass    = $request->post('pass');
+        $user = strtolower($request->post('user'));
+        $pass = $request->post('pass');
 
-        if ($this->auth->checkCredentials($user, $pass)) {
-            $_SESSION['user'] = $user;
-            $isAdmin = $this->auth->user()->isAdmin();
-
-            if ($isAdmin) {
-                $_SESSION['isadmin'] = "yes";
-            } else {
-                $_SESSION['isadmin'] = "no";
-            }
-
-            $this->app->flash('info', "You are now successfully logged in as $user.");
-            $this->app->redirect('/');
+        if (!$this->auth->checkLastTimeFailed($user)) {
+            $this->render('banned.twig', []);
             return;
         }
-        
-        $this->app->flashNow('error', 'Incorrect user/pass combination.');
-        $this->render('login.twig', []);
-    }
+
+
+        if ($this->auth->checkCredentials($user, $pass)) {
+                $_SESSION['user'] = $user;
+                $isAdmin = $this->auth->user()->isAdmin();
+
+                if ($isAdmin) {
+                    $_SESSION['isadmin'] = "yes";
+                } else {
+                    $_SESSION['isadmin'] = "no";
+                }
+
+                $this->app->flash('info', "You are now successfully logged in as $user.");
+                $this->app->redirect('/');
+                return;
+        }
+
+            $this->app->flashNow('error', 'Incorrect user/pass combination.');
+            $this->render('login.twig', []);
+        }
 }
