@@ -54,6 +54,29 @@ class AdminController extends Controller
         $this->app->redirect('/admin');
     }
 
+    public function makeDoctor($username)
+    {
+           if ($this->auth->guest()) {
+            $this->app->flash('info', "You are not supposed to be there");
+            $this->app->redirect('/');
+        }
+        elseif($this->auth->isAdmin()){
+            if ($this->userRepository->setDoctor($username) === 1) {
+                $this->app->flash('info', "Sucessfully deleted '$username'");
+                $this->app->redirect('/admin');
+                return;
+            }
+        }
+        else{
+            $this->app->flash('info', "You are not supposed to be there");
+            $this->app->redirect('/');
+        }
+
+        
+        $this->app->flash('info', "An error ocurred. Unable to delete user '$username'.");
+        $this->app->redirect('/admin');
+    }
+
     public function deletePost($postId)
     {
          if ($this->auth->guest()) {

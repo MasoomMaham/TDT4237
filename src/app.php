@@ -21,6 +21,12 @@ $app = new Slim([
 
 ]);
 
+/*if($_SERVER["HTTPS"] != "on")
+{
+    header("Location: https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
+    exit();
+}*/
+
 $view = $app->view();
 $view->parserExtensions = array(
     new TwigExtension(),
@@ -92,6 +98,10 @@ $app->get('/logout', $ns . 'UserController:logout')->name('logout');
 $app->get('/admin', $ns . 'AdminController:index')->name('admin');
 $app->get('/admin/delete/post/:postid', $ns . 'AdminController:deletepost');
 $app->get('/admin/delete/:username', $ns . 'AdminController:delete');
+
+//Give users doctor rights
+$app->get('/admin/doctor/:username', $ns . 'AdminController:makeDoctor');
+
 
 
 return $app;
