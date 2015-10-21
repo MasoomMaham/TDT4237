@@ -7,7 +7,11 @@ if (! extension_loaded('openssl')) {
 }
 
 session_cache_limiter(false);
-session_start();
+
+    if (session_id() === '') {
+        session_regenerate_id();
+        session_start();
+    }
 
 if (preg_match('/\.(?:png|jpg|jpeg|gif|txt|css|js)$/', $_SERVER["REQUEST_URI"]))
 
