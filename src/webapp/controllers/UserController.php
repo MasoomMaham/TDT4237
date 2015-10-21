@@ -7,6 +7,7 @@ use tdt4237\webapp\models\Email;
 use tdt4237\webapp\models\User;
 use tdt4237\webapp\validation\EditUserFormValidation;
 use tdt4237\webapp\validation\RegistrationFormValidation;
+use tdt4237\webapp\validation\sqlValidation;
 
 class UserController extends Controller
 {
@@ -31,12 +32,23 @@ class UserController extends Controller
     {
         $request  = $this->app->request;
         $username = strtolower($request->post('user'));
+        $usernameValidation = sqlValidation::whiteBlackListSQL($username);
         $password = $request->post('pass');
+        $passwordValidation = sqlValidation::whiteBlackListSQL($password);
         $fullname = $request->post('fullname');
+        $fullnameValidation = sqlValidation::whiteBlackListSQL($fullname);
         $address = $request->post('address');
+        $addressValidation = sqlValidation::whiteBlackListSQL($address);
         $postcode = $request->post('postcode');
+        $postcodeValidation = sqlValidation::whiteBlackListSQL($postcode);
 
         $d_user = $this->userRepository->getNameByUsername($username);
+
+        if($usernameValidation === false || $passwordValidation === false || $fullnameValidation === false || $addressValidation === false || $postcodeValidation === false)
+        {
+            $this->app->flash('info', 'Malicious code spotted in the input fields!');
+            $this->app->redirect('/user/new');
+        }
 
         if(isset($d_user)){
             $this->app->flash('info', 'Username has already been taken');
@@ -115,14 +127,26 @@ class UserController extends Controller
 
         $request = $this->app->request;
         $email   = $request->post('email');
+        $emailValidation = sqlValidation::whiteBlackListSQL($email);
         $bio     = $request->post('bio');
+        $bioValidation = sqlValidation::whiteBlackListSQL($bio);
         $age     = $request->post('age');
+        $ageValidation = sqlValidation::whiteBlackListSQL($age);
         $fullname = $request->post('fullname');
+        $fullnameValidation = sqlValidation::whiteBlackListSQL($fullname);
         $address = $request->post('address');
+        $addressValidation = sqlValidation::whiteBlackListSQL($address);
         $postcode = $request->post('postcode');
+        $postcodeValidation = sqlValidation::whiteBlackListSQL($postcode);
+
+        if($emailValidation === false || $bioValidation === false || $fullnameValidation === false || $addressValidation === false || $postcodeValidation === false)
+        {
+           $this->app->flash('info', 'Malicious code in the input fields!');
+           $this->app->redirect('/user/edit');
+        }
 
         $validation = new EditUserFormValidation($email, $bio, $age);
-
+        
         if ($validation->isGoodToGo()) {
             $user->setEmail(new Email($email));
             $user->setBio($bio);

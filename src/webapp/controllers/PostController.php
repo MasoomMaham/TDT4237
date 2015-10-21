@@ -6,6 +6,7 @@ use tdt4237\webapp\models\Post;
 use tdt4237\webapp\controllers\UserController;
 use tdt4237\webapp\models\Comment;
 use tdt4237\webapp\validation\PostValidation;
+use tdt4237\webapp\validation\sqlValidation;
 
 class PostController extends Controller
 {
@@ -35,6 +36,11 @@ class PostController extends Controller
         $comments = $this->commentRepository->findByPostId($postId);
         $request = $this->app->request;
         $message = htmlentities($request->get('msg'));
+        if(sqlValidation::whiteBlackListSQL($message) === false)
+        {
+            $this->app->flash('info', 'Malicious code spotted in the in URL!');
+            $this->app->redirect('/post');
+        }
         $variables = [];
 
 
@@ -42,8 +48,6 @@ class PostController extends Controller
             $variables['msg'] = $message;
 
         }
-
-
 
 
         $this->render('showpost.twig', [
@@ -59,9 +63,15 @@ class PostController extends Controller
 
         if(!$this->auth->guest()) {
 
+            $textComment = htmlentities($this->app->request->post("text"));
+            if(sqlValidation::whiteBlackListSQL($textComment) === false)
+            {
+                $this->app->redirect('/posts/' . $postId);            
+            }
+
             $comment = new Comment();
             $comment->setAuthor($_SESSION['user']);
-            $comment->setText(htmlentities($this->app->request->post("text")));
+            $comment->setText($textComment);
             $comment->setDate(date("dmY"));
             $comment->setPost($postId);
             $this->commentRepository->save($comment);
@@ -96,8 +106,16 @@ class PostController extends Controller
         } else {
             $request = $this->app->request;
             $title = $request->post('title');
+            $titleValidation = sqlValidation::whiteBlackListSQL($title);
             $content = $request->post('content');
+            $contentValidation = sqlValidation::whiteBlackListSQL($content);
             $author = $request->post('author');
+            $authorValidation = sqlValidation::whiteBlackListSQL($author);
+            if($titleValidation === false || $contentValidation === false || $authorValidation === false)
+            {
+                $this->app->flash('info', 'Malicious code in the input fields!');
+                $this->app->redirect('/posts/new');
+            }
             $date = date("dmY");
 
             $validation = new PostValidation($title, $author, $content);
