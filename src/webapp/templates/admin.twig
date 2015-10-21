@@ -9,11 +9,17 @@
     <tr>
         <th>Id</th>
         <th>Username</th>
+        <th>User type</th>
     </tr>
     {% for user in users %}
         <tr>
             <td>{{ user.userid|raw }}</td>
             <td><a href="/user/{{ user.username|raw }}">{{ user.username|raw }}</a></td>
+            {%if user.isdoctor %}
+            <td> Doctor </td>
+            {% else %}
+            <td> Regular </td>
+            {% endif %}
             <td><a href="/admin/delete/{{ user.username|raw }}">Delete this user</a></td>
             <td><a href="/admin/doctor/{{user.username|raw}}"> Make doctor</td>
         </tr>
