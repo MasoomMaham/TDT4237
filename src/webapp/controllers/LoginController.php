@@ -26,6 +26,10 @@ class LoginController extends Controller
 
     public function login()
     {
+        if (!$this->auth->guest()) {
+            $this->app->flash('info', "You are already logged in");
+            $this->app->redirect('/');
+        }
         $request = $this->app->request;
         $user    = strtolower($request->post('user'));
         $pass    = $request->post('pass');
