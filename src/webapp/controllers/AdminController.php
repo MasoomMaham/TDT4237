@@ -62,7 +62,7 @@ class AdminController extends Controller
         }
         elseif($this->auth->isAdmin()){
             if ($this->userRepository->setDoctor($username) === 1) {
-                $this->app->flash('info', "Sucessfully deleted '$username'");
+                $this->app->flash('info', "Sucessfully changed $username's user type");
                 $this->app->redirect('/admin');
                 return;
             }
