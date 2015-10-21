@@ -84,7 +84,10 @@ class UserRepository
         $result = $this->pdo->query($query, PDO::FETCH_ASSOC);
         $row = $result->fetch();
 
-        if($row === false){
+        if($row == null){
+            return true;
+        }
+        if($row == 0){
             return false;
         }
         return true;
