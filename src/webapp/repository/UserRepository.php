@@ -96,7 +96,7 @@ class UserRepository
 
         $result = $this->pdo->query($query, PDO::FETCH_ASSOC);
         $row = $result->fetch();
-        return $row['failed_attempts'];
+        return $row['FAILED_ATTEMPTS'];
 
     }
 
