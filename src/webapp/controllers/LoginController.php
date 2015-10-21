@@ -1,11 +1,15 @@
 <?php
-
 namespace tdt4237\webapp\controllers;
 
 use tdt4237\webapp\repository\UserRepository;
+use tdt4237\webapp\validation\sqlValidation;
+use tdt4237\webapp;
+
 
 class LoginController extends Controller
 {
+
+
 
     public function __construct()
     {
@@ -24,11 +28,24 @@ class LoginController extends Controller
         $this->render('login.twig', []);
     }
 
+     /*if (!$this->auth->guest()) {
+
+            $this->app->flash('info', "You are already logged in");
+
+            $this->app->redirect('/');
+    }  */ 
+
+
     public function login()
     {
         $request = $this->app->request;
         $user    = strtolower($request->post('user'));
         $pass    = $request->post('pass');
+        if(sqlValidation::whiteBlackListSQL($user) === false)
+        {
+            $this->app->flash('info', 'Illegal characters in the input fields!');
+            $this->app->redirect('/login');
+        }
 
         if ($this->auth->checkCredentials($user, $pass)) {
             $_SESSION['user'] = $user;
