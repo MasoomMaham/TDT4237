@@ -82,6 +82,8 @@ class PostRepository
     {
         return $this->db->exec(
             sprintf("DELETE FROM posts WHERE postid='%s';", $postId));
+    
+
     }
 
 

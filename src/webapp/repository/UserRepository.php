@@ -135,6 +135,12 @@ class UserRepository
         );
     }
 
+    public function setDoctor($username)
+    {
+        return $this->pdo->exec(
+            sprintf("UPDATE users SET isdoctor = '1' WHERE user = '%s';", $username));
+    }
+
     public function all()
     {
         $rows = $this->pdo->query(self::SELECT_ALL);
