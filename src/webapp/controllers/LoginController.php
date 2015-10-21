@@ -28,13 +28,6 @@ class LoginController extends Controller
         $this->render('login.twig', []);
     }
 
-     /*if (!$this->auth->guest()) {
-
-            $this->app->flash('info', "You are already logged in");
-
-            $this->app->redirect('/');
-    }  */ 
-
 
     public function login()
     {
