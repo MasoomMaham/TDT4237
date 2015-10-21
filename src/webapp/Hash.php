@@ -25,11 +25,23 @@ class Hash
         return $hashsalt;
     }
 
+    function hash_equals($str1, $str2) {
+        if(strlen($str1) != strlen($str2)) {
+            return false;
+        } else {
+            $res = $str1 ^ $str2;
+            $ret = 0;
+            for($i = strlen($res) - 1; $i >= 0; $i--) $ret |= ord($res[$i]);
+            return !$ret;
+        }
+    }
+
+
     public function check($plaintext, $hash)
     {
         //return $this->make($plaintext) === $hash;
         $salt = substr($hash, -10);
         $newhash = crypt($plaintext, '$6$' . $salt) . $salt;
-        return $newhash === $hash;
+        return ($this->hash_equals($newhash, $hash));
     }
 }
