@@ -102,6 +102,8 @@ $app->get('/admin/delete/:username', $ns . 'AdminController:delete');
 //Give users doctor rights
 $app->get('/admin/doctor/:username', $ns . 'AdminController:makeDoctor');
 
+$app->get('/balance', $ns . 'BalanceController:index')->name('balance');
+
 
 
 return $app;

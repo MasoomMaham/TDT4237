@@ -29,6 +29,7 @@ class Controller
             $variables['loggedInUsername'] = $_SESSION['user'];
             $variables['isDoctor'] = $_SESSION['isdoctor'];
             $variables['hasBank'] = $_SESSION['hasbank'];
+            $variables['balance'] = $this->auth->checkBalance($_SESSION['user']);
         }
 
         print $this->app->render($template, $variables);

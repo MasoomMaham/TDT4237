@@ -71,6 +71,11 @@ class Auth
         return true;
     }
 
+    public function checkBalance($username){
+        $balance = $this->userRepository->checkBalance($username);
+        return $balance;
+    }
+
 
     /**
      * Check if is logged in.

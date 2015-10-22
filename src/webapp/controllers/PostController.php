@@ -74,8 +74,12 @@ class PostController extends Controller
             $comment->setText($textComment);
             $comment->setDate(date("dmY"));
             $comment->setPost($postId);
+
             if($_SESSION['isdoctor'] == 1){
                 $this->userRepository->setIsanswered($postId);
+                $this->userRepository->setbalance($_SESSION['user']);
+                $author = $this->userRepository->getPostAuthor($postId);
+                $this->userRepository->setAuthorbalance($author);
             }
             $this->commentRepository->save($comment);
             $this->app->redirect('/posts/' . $postId);

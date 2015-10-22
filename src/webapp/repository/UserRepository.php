@@ -24,7 +24,10 @@ class UserRepository
     const CHECK_IS_DOCTOR   = "SELECT * FROM users WHERE user='%s' and isdoctor=1";
     const UPDATE_ISANSWERED  = "UPDATE posts SET isanswered = 1 WHERE postId='%d'";
     const CHECK_IS_BANK   = "SELECT * FROM users WHERE user='%s' and bank>1";
-
+    const CHECK_BALANCE   = "SELECT * FROM users WHERE user='%s'";
+    const UPDATE_BALANCE  = "UPDATE users SET balance = balance + 10 WHERE user='%s'";
+    const UPDATE_BALANCE2  = "UPDATE users SET balance = balance - 10 WHERE user='%s'";
+    const FIND_POST_AUTHOR  = "SELECT * FROM posts WHERE postId='%d'";
 
 
 
@@ -67,6 +70,15 @@ class UserRepository
         $result = $this->pdo->query($query, PDO::FETCH_ASSOC);
         $row = $result->fetch();
         return $row['fullname'];
+    }
+
+    public function getPostAuthor($postId)
+    {
+        $query = sprintf(self::FIND_POST_AUTHOR, $postId);
+
+        $result = $this->pdo->query($query, PDO::FETCH_ASSOC);
+        $row = $result->fetch();
+        return $row['author'];
     }
 
     public function findByUser($username)
@@ -125,6 +137,24 @@ class UserRepository
     {
         $query = sprintf(
             self::UPDATE_ISANSWERED, $postId
+        );
+        $this->pdo->exec($query);
+
+    }
+
+    public function setbalance($username)
+    {
+        $query = sprintf(
+            self::UPDATE_BALANCE, $username
+        );
+        $this->pdo->exec($query);
+
+    }
+
+    public function setAuthorbalance($username)
+    {
+        $query = sprintf(
+            self::UPDATE_BALANCE2, $username
         );
         $this->pdo->exec($query);
 
@@ -206,6 +236,14 @@ class UserRepository
         $result = $this->pdo->query($query, PDO::FETCH_ASSOC);
         $row = $result->fetch();
         return $row['bank'];
+    }
+
+    public function checkBalance($username){
+        $query = sprintf(self::FIND_FULL_NAME, $username);
+
+        $result = $this->pdo->query($query, PDO::FETCH_ASSOC);
+        $row = $result->fetch();
+        return $row['balance'];
     }
 
 }
