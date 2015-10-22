@@ -19,7 +19,7 @@ class PostRepository
         $this->db = $db;
     }
     
-    public static function create($id, $author, $title, $content, $date)
+    public static function create($id, $author, $title, $content, $date, $payed, $answered)
     {
         $post = new Post;
         
@@ -28,7 +28,9 @@ class PostRepository
             ->setAuthor($author)
             ->setTitle($title)
             ->setContent($content)
-            ->setDate($date);
+            ->setDate($date)
+            ->setpayed($payed)
+            ->setAnswered($answered);
     }
 
     public function find($postId)
@@ -56,10 +58,12 @@ class PostRepository
         }
 
         $fetch = $results->fetchAll();
+
         if(count($fetch) == 0) {
             return false;
         }
 
+        print_r(array_map([$this, 'makeFromRow'], $fetch));
         return new PostCollection(
             array_map([$this, 'makeFromRow'], $fetch)
         );
@@ -72,9 +76,10 @@ class PostRepository
             $row['author'],
             $row['title'],
             $row['content'],
-            $row['date']
+            $row['date'],
+            $row['ispayed'],
+            $row['isanswered']
         );
-
        //  $this->db = $db;
     }
 
@@ -93,10 +98,12 @@ class PostRepository
         $author = $post->getAuthor();
         $content = $post->getContent();
         $date    = $post->getDate();
+        $payed = $post->getpayed();
+        $answered = $post->getanswered();
 
         if ($post->getPostId() === null) {
-            $query = "INSERT INTO posts (title, author, content, date) "
-                . "VALUES ('$title', '$author', '$content', '$date')";
+            $query = "INSERT INTO posts (title, author, content, date, payed, answered) "
+                . "VALUES ('$title', '$author', '$content', '$date','$payed', '$answered')";
         }
 
         $this->db->exec($query);
