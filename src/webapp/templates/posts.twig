@@ -6,7 +6,15 @@
 
     {% for post in posts %}
         <div class="post">
-            <a href="/posts/{{ post.postId }}">{{ post.title}}</a> by  <a href="/user/{{ post.author|raw }}"> {{ post.author|raw }}</a>. Posted on {{ post.date }}
+            {% if isdoctor %}
+                {% if (post.payed==1) and (post.answered==1) %}
+                    <a href="/posts/{{ post.postId }}">Bitch please</a>
+                {% endif %}
+            {% elseif isdoctor==false %}
+                <a href="/posts/{{ post.postId }}">{{ post.title}}</a> by  <a href="/user/{{ post.author|raw }}"> {{ post.author|raw }}</a>. Posted on {{ post.date }}
+            {% else %}
+                <a href="/posts/{{ post.postId }}">bitchy</a>
+            {% endif %}
         </div>
     {% else %}
         There are no posts as of yet
