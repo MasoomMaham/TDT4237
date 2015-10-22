@@ -16,5 +16,8 @@
         <label>Author:</label>
         <input type="text" name="author" readOnly="true" value="{{username}}"> <br />
         <input type="submit" name="submit" value="Create post">
+        {% if hasBank %}
+        <input type='checkbox' name='checkbox' id='checkbox' value='checkbox'>Make is visible for doctors<br>
+        {% endif %}
     </form>
 {% endblock %}

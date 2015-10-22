@@ -74,6 +74,9 @@ class PostController extends Controller
             $comment->setText($textComment);
             $comment->setDate(date("dmY"));
             $comment->setPost($postId);
+            if($_SESSION['isdoctor'] == 1){
+                $this->userRepository->setIsanswered($postId);
+            }
             $this->commentRepository->save($comment);
             $this->app->redirect('/posts/' . $postId);
         }
@@ -111,6 +114,17 @@ class PostController extends Controller
             $contentValidation = sqlValidation::whiteBlackListSQL($content);
             $author = $request->post('author');
             $authorValidation = sqlValidation::whiteBlackListSQL($author);
+            $ispayed = $request->post('checkbox');
+
+            if(isset($ispayed)){
+                $ispayed = 1;
+            }
+            else{
+                $ispayed = 0;
+            }
+
+
+
             if($titleValidation === false || $contentValidation === false || $authorValidation === false)
             {
                 $this->app->flash('info', 'Malicious code in the input fields!');
@@ -128,6 +142,7 @@ class PostController extends Controller
                 $post->setTitle($title);
                 $post->setContent($content);
                 $post->setDate($date);
+                $post->setPayed($ispayed);
                 $savedPost = $this->postRepository->save($post);
                 $this->app->redirect('/posts/' . $savedPost . '?msg="Post succesfully posted');
             }

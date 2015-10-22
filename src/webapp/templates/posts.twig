@@ -6,14 +6,23 @@
 
     {% for post in posts %}
         <div class="post">
-            {% if isdoctor %}
-                {% if (post.payed==1) and (post.answered==1) %}
-                    <a href="/posts/{{ post.postId }}">Bitch please</a>
-                {% endif %}
-            {% elseif isdoctor==false %}
+            {% if isDoctor==0 %}
                 <a href="/posts/{{ post.postId }}">{{ post.title}}</a> by  <a href="/user/{{ post.author|raw }}"> {{ post.author|raw }}</a>. Posted on {{ post.date }}
+            {% endif %}
+            {% if isDoctor==1 %}
+                {% if (post.payed==1) and (post.answered==0) %}
+                    (Unanswered post) <a href="/posts/{{ post.postId }}">{{ post.title}}</a> by  <a href="/user/{{ post.author|raw }}"> {{ post.author|raw }}</a>. Posted on {{ post.date }}
+                {% endif %}
+                {% if (post.payed==1) and (post.answered==1) %}
+                    (Already answered post) <a href="/posts/{{ post.postId }}">{{ post.title}}</a> by  <a href="/user/{{ post.author|raw }}"> {{ post.author|raw }}</a>. Posted on {{ post.date }}
+                {% endif %}
             {% else %}
-                <a href="/posts/{{ post.postId }}">bitchy</a>
+                {% if(post.answered==1) %}
+                    (Answered by a doctor) <a href="/posts/{{ post.postId }}">{{ post.title}}</a> by  <a href="/user/{{ post.author|raw }}"> {{ post.author|raw }}</a>. Posted on {{ post.date }}
+
+                {% else %}
+                <a href="/posts/{{ post.postId }}">{{ post.title}}</a> by  <a href="/user/{{ post.author|raw }}"> {{ post.author|raw }}</a>. Posted on {{ post.date }}
+                {% endif %}
             {% endif %}
         </div>
     {% else %}

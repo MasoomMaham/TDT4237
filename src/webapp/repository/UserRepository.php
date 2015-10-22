@@ -11,7 +11,7 @@ use tdt4237\webapp\models\User;
 class UserRepository
 {
     const INSERT_QUERY   = "INSERT INTO users(user, pass, email, age, bio, isadmin, fullname, address, postcode) VALUES('%s', '%s', '%s' , '%s' , '%s', '%s', '%s', '%s', '%s')";
-    const UPDATE_QUERY   = "UPDATE users SET email='%s', age='%s', bio='%s', isadmin='%s', fullname ='%s', address = '%s', postcode = '%s' WHERE id='%s'";
+    const UPDATE_QUERY   = "UPDATE users SET email='%s', age='%s', bio='%s', isadmin='%s', fullname ='%s', address = '%s', postcode = '%s', bank = '%d' WHERE id='%s'";
     const FIND_BY_NAME   = "SELECT * FROM users WHERE user='%s'";
     const DELETE_BY_NAME = "DELETE FROM users WHERE user='%s'";
     const SELECT_ALL     = "SELECT * FROM users";
@@ -21,6 +21,11 @@ class UserRepository
     const FAILED_ATTEMPTS  = "select * from users where user='%s'";// and FAILED_ATTEMPTS>3";
     const UPDATE_ATTEMPTS  = "UPDATE users SET FAILED_ATTEMPTS= FAILED_ATTEMPTS + 1 WHERE user='%s'";
     const RESET_ATTEMPTS  = "UPDATE users SET FAILED_ATTEMPTS=0 WHERE user='%s'";
+    const CHECK_IS_DOCTOR   = "SELECT * FROM users WHERE user='%s' and isdoctor=1";
+    const UPDATE_ISANSWERED  = "UPDATE posts SET isanswered = 1 WHERE postId='%d'";
+    const CHECK_IS_BANK   = "SELECT * FROM users WHERE user='%s' and bank>1";
+
+
 
 
 
@@ -116,6 +121,15 @@ class UserRepository
         $this->pdo->exec($query);
     }
 
+    public function setIsanswered($postId)
+    {
+        $query = sprintf(
+            self::UPDATE_ISANSWERED, $postId
+        );
+        $this->pdo->exec($query);
+
+    }
+
     public function updateDbTime($username)
     {
         $time = time()+30;
@@ -136,6 +150,15 @@ class UserRepository
     {
         return $this->pdo->exec(
             sprintf("UPDATE users SET isdoctor = '1' WHERE user = '%s';", $username));
+    }
+
+    public function checkDoctor($username)
+    {
+        $query = sprintf(self::CHECK_IS_DOCTOR, $username);
+
+        $result = $this->pdo->query($query, PDO::FETCH_ASSOC);
+        $row = $result->fetch();
+        return $row['isdoctor'];
     }
 
     public function all()
@@ -171,10 +194,18 @@ class UserRepository
     public function saveExistingUser(User $user)
     {
         $query = sprintf(
-            self::UPDATE_QUERY, $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->getUserId()
+            self::UPDATE_QUERY, $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->getBank(), $user->getUserId()
         );
 
         return $this->pdo->exec($query);
+    }
+
+    public function checkBank($username){
+        $query = sprintf(self::CHECK_IS_BANK, $username);
+
+        $result = $this->pdo->query($query, PDO::FETCH_ASSOC);
+        $row = $result->fetch();
+        return $row['bank'];
     }
 
 }

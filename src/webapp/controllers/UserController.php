@@ -138,6 +138,7 @@ class UserController extends Controller
         $addressValidation = sqlValidation::whiteBlackListSQL($address);
         $postcode = $request->post('postcode');
         $postcodeValidation = sqlValidation::whiteBlackListSQL($postcode);
+        $bank = $request->post('bank');
 
         if($emailValidation === false || $bioValidation === false || $fullnameValidation === false || $addressValidation === false || $postcodeValidation === false)
         {
@@ -154,6 +155,7 @@ class UserController extends Controller
             $user->setFullname($fullname);
             $user->setAddress($address);
             $user->setPostcode($postcode);
+            $user->setBank($bank);
             $this->userRepository->save($user);
 
             $this->app->flashNow('info', 'Your profile was successfully saved.');

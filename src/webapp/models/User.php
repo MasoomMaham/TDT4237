@@ -78,6 +78,15 @@ class User
 
     }
 
+    public function setBank($bank) {
+        $this->bankcard = $bank;
+    }
+
+    public function getBank() {
+        return $this->bankcard;
+
+    }
+
     public function setPostcode($postcode) {
         $this->postcode = $postcode;
 
@@ -130,9 +139,6 @@ class User
         return $this;
     }   
 
-    public function isDoctor(){
-        return $this->isDoctor == '1';
-    }
 
     public function setIsDoctor($isDoctor)
     {

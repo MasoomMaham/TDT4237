@@ -63,7 +63,7 @@ class PostRepository
             return false;
         }
 
-        print_r(array_map([$this, 'makeFromRow'], $fetch));
+        //print_r(array_map([$this, 'makeFromRow'], $fetch));
         return new PostCollection(
             array_map([$this, 'makeFromRow'], $fetch)
         );
@@ -98,12 +98,12 @@ class PostRepository
         $author = $post->getAuthor();
         $content = $post->getContent();
         $date    = $post->getDate();
-        $payed = $post->getpayed();
-        $answered = $post->getanswered();
+        $ispayed = $post->getpayed();
+
 
         if ($post->getPostId() === null) {
-            $query = "INSERT INTO posts (title, author, content, date, payed, answered) "
-                . "VALUES ('$title', '$author', '$content', '$date','$payed', '$answered')";
+            $query = "INSERT INTO posts (title, author, content, date, ispayed) "
+                . "VALUES ('$title', '$author', '$content', '$date','$ispayed')";
         }
 
         $this->db->exec($query);

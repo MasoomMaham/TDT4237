@@ -39,6 +39,23 @@ class Auth
     public function checkLastTimeFailed($username)
     {
         $time = $this->userRepository->getTimebyUsername($username, time());
+        $isdoctor = $this->userRepository->checkDoctor($username);
+        $hasBank= $this->userRepository->checkBank($username);
+
+
+        if(isset($isdoctor)){
+           $_SESSION['isdoctor'] = 1;
+        }
+        else{
+            $_SESSION['isdoctor'] = 0;
+        }
+
+        if(isset($hasBank)){
+            $_SESSION['hasbank'] = 1;
+        }
+        else{
+            $_SESSION['hasbank'] = 0;
+        }
 
         if ($time === false) {
             return false;

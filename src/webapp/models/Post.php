@@ -17,6 +17,8 @@ class Post
     protected $date;
     protected $ispayed;
     protected $isanswered;
+    protected $bank;
+
 
 
 
@@ -83,6 +85,9 @@ class Post
     public function getAnswered(){
         return $this->isanswered;
     }
+
+
+
 
 
 
