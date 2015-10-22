@@ -158,6 +158,10 @@ class UserController extends Controller
             $user->setBank($bank);
             $this->userRepository->save($user);
 
+            if($bank>1){
+                $_SESSION['hasbank'] = 1;
+            }
+
             $this->app->flashNow('info', 'Your profile was successfully saved.');
             return $this->render('edituser.twig', ['user' => $user]);
         }
