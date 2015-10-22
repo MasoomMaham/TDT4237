@@ -27,7 +27,7 @@ class Controller
             $variables['isLoggedIn'] = true;
             $variables['isAdmin'] = $this->auth->isAdmin();
             $variables['loggedInUsername'] = $_SESSION['user'];
-            $variables['isdoctor'] = $_SESSION['isdoctor'];
+            $variables['isDoctor'] = $_SESSION['user'];
         }
 
         print $this->app->render($template, $variables);

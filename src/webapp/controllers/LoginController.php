@@ -55,12 +55,19 @@ class LoginController extends Controller
         if ($this->auth->checkCredentials($user, $pass)) {
                 $_SESSION['user'] = $user;
                 $isAdmin = $this->auth->user()->isAdmin();
+                $isDoctor = $this->auth->user()->isDoctor();
 
                 if ($isAdmin) {
                     $_SESSION['isadmin'] = "yes";
                 } else {
                     $_SESSION['isadmin'] = "no";
                 }
+                if ($isDoctor) {
+                    $_SESSION['isdoctor'] = "yes";
+                } else {
+                    $_SESSION['isdoctor'] = "no";
+                }
+
                 $this->userRepository->reset_failed_attempts($user);
                 $this->app->flash('info', "You are now successfully logged in as $user.");
                 $this->app->redirect('/');
