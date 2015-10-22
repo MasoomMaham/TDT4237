@@ -61,7 +61,7 @@ class LoginController extends Controller
                 } else {
                     $_SESSION['isadmin'] = "no";
                 }
-
+                $this->userRepository->reset_failed_attempts($user);
                 $this->app->flash('info', "You are now successfully logged in as $user.");
                 $this->app->redirect('/');
                 return;
