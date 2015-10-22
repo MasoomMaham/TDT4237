@@ -15,6 +15,9 @@ class Post
     protected $title;
     protected $content;
     protected $date;
+    protected $ispayed;
+    protected $isanswered;
+
 
 
     public function getPostId() {
@@ -62,6 +65,28 @@ class Post
     public function getTitle() {
         return $this->title;
     }
+
+    public function setPayed($ispayed){
+        $this->ispayed = $ispayed;
+        return $this;
+    }
+
+    public function setAnswered($isanswered){
+        $this->isanswered = $isanswered;
+        return $this;
+    }
+
+    public function getPayed(){
+        return $this->ispayed;
+    }
+
+    public function getAnswered(){
+        return $this->isanswered;
+    }
+
+
+
+
 
 
 
